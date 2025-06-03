@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { HashPassword } from 'src/common/utils/hashPassword';
+import { Role } from 'src/common/enum/role.enum';
 
 @Injectable()
 export class UsersService {
@@ -27,9 +28,14 @@ export class UsersService {
     const hashedPassword = await HashPassword.hashPassword(
       createUserDto.password,
     );
-    createUserDto.password = hashedPassword;
 
-    return this.usersRepository.save(createUserDto);
+    const userData = {
+      ...createUserDto,
+      password: hashedPassword,
+      role: createUserDto.role || Role.User,
+    };
+
+    return this.usersRepository.save(userData);
   }
 
   async findAll(): Promise<User[]> {

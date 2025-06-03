@@ -1,6 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateUserDto } from './create-user.dto';
-import { IsOptional, IsEmail, MinLength } from 'class-validator';
+import { IsOptional, IsEmail, MinLength, IsEnum } from 'class-validator';
+import { Role } from 'src/common/enum/role.enum';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsOptional()
@@ -13,4 +14,8 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsOptional()
   @MinLength(6, { message: 'Senha deve ter pelo menos 6 caracteres' })
   password?: string;
+
+  @IsOptional()
+  @IsEnum(Role)
+  role?: Role;
 }

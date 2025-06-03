@@ -12,6 +12,8 @@ import { UsersService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from 'src/common/decorator/public.decorator';
+import { Roles } from 'src/common/decorator/roles.decorator';
+import { Role } from 'src/common/enum/role.enum';
 
 @Controller('users')
 export class UsersController {
@@ -28,6 +30,7 @@ export class UsersController {
     };
   }
 
+  @Roles(Role.Admin)
   @Get()
   async getAll() {
     return await this.usersService.findAll();
@@ -61,6 +64,7 @@ export class UsersController {
     };
   }
 
+  @Roles(Role.Admin)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const deletedUser = await this.usersService.remove(+id);

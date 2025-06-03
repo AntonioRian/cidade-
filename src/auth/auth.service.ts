@@ -21,7 +21,11 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const payload = { sub: user.email, username: user.name };
+    // Garante que role seja um número
+    const userRole =
+      typeof user.role === 'string' ? parseInt(user.role, 10) : user.role;
+
+    const payload = { sub: user.id, username: user.name, role: userRole };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

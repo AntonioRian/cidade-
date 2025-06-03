@@ -14,8 +14,7 @@ import { User } from 'src/users/entities/user.entity';
           // Configuração SQLite para desenvolvimento
           return {
             type: 'sqlite',
-            database:
-              configService.get('DB_DATABASE_DEV') || './database.sqlite',
+            database: configService.get('DB_DATABASE_DEV'),
             entities: [User],
             synchronize: true,
             logging: true,
@@ -30,7 +29,7 @@ import { User } from 'src/users/entities/user.entity';
             password: configService.get('DB_PASSWORD_PROD'),
             database: configService.get('DB_DATABASE_PROD'),
             entities: [__dirname + '/../../**/*.entity{.ts,.js}'],
-            synchronize: false, // Nunca use true em produção
+            synchronize: false,
             ssl:
               configService.get('NODE_ENV') === 'production'
                 ? { rejectUnauthorized: false }
