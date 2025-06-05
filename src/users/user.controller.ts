@@ -11,9 +11,9 @@ import {
 import { UsersService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Public } from 'src/common/decorator/public.decorator';
-import { Roles } from 'src/common/decorator/roles.decorator';
-import { Role } from 'src/common/enum/role.enum';
+import { Public } from 'src/auth/decorator/public.decorator';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { Role } from 'src/auth/enum/role.enum';
 
 @Controller('users')
 export class UsersController {

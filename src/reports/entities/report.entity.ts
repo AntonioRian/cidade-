@@ -8,24 +8,8 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
-
-export enum ReportCategory {
-  ANIMAL = 'Animal',
-  INFRAESTRUTURA = 'Infraestrutura',
-  ENERGIA = 'Energia',
-  AGUA = 'Água',
-  SUJEIRA = 'Sujeira',
-  AMBIENTAL = 'Ambiental',
-}
-
-export enum ReportStatus {
-  AVALIACAO = 'avaliação',
-  ABERTO = 'aberto',
-  SOLUCIONADO = 'solucionado',
-  RECUSADO = 'recusado',
-  CONCLUIDO = 'concluído',
-  URGENTE = 'urgente',
-}
+import { ReportStatus } from '../enums/report-status.enum';
+import { ReportCategory } from '../enums/report-category.enum';
 
 @Entity('reports')
 export class Report {
@@ -38,18 +22,18 @@ export class Report {
   @Column({ type: 'text', nullable: false })
   description: string;
 
-  @Column({ length: 300, nullable: false })
+  @Column({ length: 500, nullable: false })
   location: string;
 
   @Column({
-    type: 'enum',
+    type: 'text',
     enum: ReportCategory,
     nullable: false,
   })
   category: ReportCategory;
 
   @Column({
-    type: 'enum',
+    type: 'text',
     enum: ReportStatus,
     default: ReportStatus.AVALIACAO,
     nullable: false,
@@ -62,7 +46,7 @@ export class Report {
   @Column({ nullable: false })
   userId: number;
 
-  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
   user: User;
 

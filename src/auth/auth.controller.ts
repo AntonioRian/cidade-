@@ -10,14 +10,11 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
-import { Roles } from 'src/common/decorator/roles.decorator';
-import { Role } from 'src/common/enum/role.enum';
-import { Public } from 'src/common/decorator/public.decorator';
+import { Public } from './decorator/public.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
-
 
   @Public()
   @UseGuards(AuthGuard)

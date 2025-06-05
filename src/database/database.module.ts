@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from 'src/users/entities/user.entity';
+import { Report } from 'src/reports/entities/report.entity';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { User } from 'src/users/entities/user.entity';
           return {
             type: 'sqlite',
             database: configService.get('DB_DATABASE_DEV'),
-            entities: [User],
+            entities: [User, Report],
             synchronize: true,
             logging: true,
           };
