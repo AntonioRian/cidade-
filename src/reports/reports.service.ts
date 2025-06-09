@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Report } from './entities/report.entity';
 import { UsersService } from 'src/users/user.service';
+import { ReportCategory } from './enums/report-category.enum';
+import { ReportStatus } from './enums/report-status.enum';
 
 @Injectable()
 export class ReportsService {
@@ -14,33 +16,37 @@ export class ReportsService {
   ) {}
 
   async create(createReportDto: CreateReportDto) {
+    if (createReportDto.category === ReportCategory.AMBIENTAL) {
+      createReportDto.status = ReportStatus.URGENTE;
+    }
     const reportEntity = this.reportRepository.create({
       ...createReportDto,
     });
 
     const newReport = await this.reportRepository.save(reportEntity);
-
     return newReport;
   }
 
   async findAll() {
-    return await this.reportRepository.find({
-      relations: {
-        user: true,
-      },
+    const reports = await this.reportRepository.find({
+      relations: { user: true },
     });
+
+    return reports;
   }
 
-  async findAllByUserId(id: number): Promise<Report[]> {
+  async findAllByUserId(id: number) {
     const user = await this.userService.findOne(id);
     if (!user) {
       throw new Error('Usuário não encontrado');
     }
 
-    const response = await this.reportRepository.find({
+    const reports = await this.reportRepository.find({
       where: { userId: user.id },
+      relations: { user: true },
     });
-    return response || [];
+
+    return reports;
   }
 
   findOne(id: number) {
