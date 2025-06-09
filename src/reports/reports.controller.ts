@@ -57,9 +57,9 @@ export class ReportsController {
     return this.reportsService.findAll();
   }
 
-  @Get('user/todos:id')
-  findAllByUser(@Param('id') id: string) {
-    return this.reportsService.findAllByUserId();
+  @Get('todos/:id')
+  async findAllByUser(@Param('id') id: string) {
+    return await this.reportsService.findAllByUserId(Number(id));
   }
 
   @Roles(Role.Admin, Role.Secretaria)

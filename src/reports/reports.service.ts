@@ -4,11 +4,13 @@ import { UpdateReportDto } from './dto/update-report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Report } from './entities/report.entity';
+import { UsersService } from 'src/users/user.service';
 
 @Injectable()
 export class ReportsService {
   constructor(
     @InjectRepository(Report) private reportRepository: Repository<Report>,
+    private userService: UsersService,
   ) {}
 
   async create(createReportDto: CreateReportDto) {
@@ -29,7 +31,17 @@ export class ReportsService {
     });
   }
 
-  findAllByUserId() {}
+  async findAllByUserId(id: number): Promise<Report[]> {
+    const user = await this.userService.findOne(id);
+    if (!user) {
+      throw new Error('Usuário não encontrado');
+    }
+
+    const response = await this.reportRepository.find({
+      where: { userId: user.id },
+    });
+    return response || [];
+  }
 
   findOne(id: number) {
     return `This action returns a #${id} report`;
