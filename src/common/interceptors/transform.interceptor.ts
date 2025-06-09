@@ -16,20 +16,25 @@ export class TransformInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map((data) => {
-        // Busca a classe de resposta definida no decorator
-        const ResponseClass = this.reflector.get<ClassConstructor<any>>(
-          'responseClass',
-          context.getHandler(),
-        );
+        const ResponseClass = this.reflector.get<
+          ClassConstructor<any> | ClassConstructor<any>[]
+        >('responseClass', context.getHandler());
 
-        // Se não há classe definida, dados são null/undefined, ou ResponseClass não é válida
-        if (!ResponseClass || !data || typeof ResponseClass !== 'function') {
+        if (!ResponseClass || !data) {
           return data;
         }
 
-        // Aplica a transformação
+        // Se ResponseClass é um array, significa que é uma lista
+        if (Array.isArray(ResponseClass)) {
+          const [ItemClass] = ResponseClass;
+          return plainToInstance(ItemClass, data, {
+            excludeExtraneousValues: true,
+          });
+        }
+
+        // Caso contrário, é um objeto único
         return plainToInstance(ResponseClass, data, {
-          excludeExtraneousValues: true, // Remove campos não marcados com @Expose()
+          excludeExtraneousValues: true,
         });
       }),
     );

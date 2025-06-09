@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -14,6 +15,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from 'src/auth/decorator/public.decorator';
 import { Roles } from 'src/auth/decorator/roles.decorator';
 import { Role } from 'src/auth/enum/role.enum';
+import { ResponseClass } from 'src/common/decorators/response-class.decorator';
+import { UserResponseDto } from './dto/user-response.dto';
 
 @Controller('users')
 export class UsersController {
@@ -32,6 +35,7 @@ export class UsersController {
 
   @Roles(Role.Admin)
   @Get()
+  @ResponseClass(UserResponseDto)
   async getAll() {
     return await this.usersService.findAll();
   }
