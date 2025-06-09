@@ -41,7 +41,7 @@ export class Report {
   status: ReportStatus;
 
   @Column({ length: 500, nullable: true })
-  imageUrl: string;
+  image: string;
 
   @Column({ nullable: false })
   userId: number;

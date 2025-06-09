@@ -1,8 +1,6 @@
 export enum ReportStatus {
-  AVALIACAO = 'avaliação',
-  ABERTO = 'aberto',
-  SOLUCIONADO = 'solucionado',
+  AVALIACAO = 'avaliacao',
   RECUSADO = 'recusado',
-  CONCLUIDO = 'concluído',
+  CONCLUIDO = 'concluido',
   URGENTE = 'urgente',
 }

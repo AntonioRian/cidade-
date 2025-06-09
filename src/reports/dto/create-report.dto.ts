@@ -1,7 +1,7 @@
 import { User } from 'src/users/entities/user.entity';
 import { ReportCategory } from '../enums/report-category.enum';
 import { ReportStatus } from '../enums/report-status.enum';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsEnum } from 'class-validator';
 
 export class CreateReportDto {
   @IsNotEmpty({ message: 'O titulo é obrigatório' })
@@ -14,13 +14,15 @@ export class CreateReportDto {
   location: string;
 
   @IsNotEmpty({ message: 'A categoria é obrigatória' })
+  @IsEnum(ReportCategory, { message: 'Categoria deve ser um valor válido' })
   category: ReportCategory;
 
-  @IsNotEmpty({ message: 'O status é obrigatório' })
-  status: ReportStatus;
+  @IsOptional()
+  @IsEnum(ReportStatus, { message: 'Status deve ser um valor válido' })
+  status?: ReportStatus;
 
-  @IsNotEmpty({ message: 'A imagem é obrigatória' })
-  imageUrl: string;
+  @IsOptional()
+  image?: string;
 
   @IsNotEmpty({ message: 'O usuário é obrigatório' })
   userId: User['id'];
