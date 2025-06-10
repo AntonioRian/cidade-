@@ -24,7 +24,6 @@ export class TransformInterceptor implements NestInterceptor {
           return data;
         }
 
-        // Se ResponseClass é um array, significa que é uma lista
         if (Array.isArray(ResponseClass)) {
           const [ItemClass] = ResponseClass;
           return plainToInstance(ItemClass, data, {
@@ -32,7 +31,6 @@ export class TransformInterceptor implements NestInterceptor {
           });
         }
 
-        // Caso contrário, é um objeto único
         return plainToInstance(ResponseClass, data, {
           excludeExtraneousValues: true,
         });
