@@ -6,8 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  Query,
-  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
