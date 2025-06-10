@@ -7,6 +7,9 @@ import { Report } from './entities/report.entity';
 import { UsersService } from 'src/users/user.service';
 import { ReportCategory } from './enums/report-category.enum';
 import { ReportStatus } from './enums/report-status.enum';
+import { FilterReportDto } from './dto/filter-report.dto';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { Role } from 'src/auth/enum/role.enum';
 
 @Injectable()
 export class ReportsService {
@@ -27,6 +30,7 @@ export class ReportsService {
     return newReport;
   }
 
+  @Roles(Role.Admin)
   async findAll() {
     const reports = await this.reportRepository.find({
       relations: { user: true },
@@ -49,15 +53,41 @@ export class ReportsService {
     return reports;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} report`;
+  async findByFilter(filterDto: FilterReportDto) {
+    const { status, category } = filterDto;
+    const query = this.reportRepository.createQueryBuilder('report');
+
+    query.where('report.status = :status OR report.category = :category', {
+      status,
+      category,
+    });
+
+    return await query.getMany();
   }
 
-  update(id: number, updateReportDto: UpdateReportDto) {
-    return `This action updates a #${id} report`;
+  async update(id: number, updateReportDto: UpdateReportDto) {
+    const reportToUpdate = await this.reportRepository.findOneBy({ id });
+    if (!reportToUpdate) {
+      throw new Error('Reporte não encontrado');
+    }
+
+    await this.reportRepository.update(id, updateReportDto);
+    return {
+      report: reportToUpdate,
+      message: 'O reporte foi atualizado com sucesso!',
+    };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} report`;
+  async remove(id: number) {
+    const reportToDelete = await this.reportRepository.findOneBy({ id });
+    if (!reportToDelete) {
+      throw new Error('Reporte não encontrado');
+    }
+
+    await this.reportRepository.delete(id);
+    return {
+      report: reportToDelete,
+      message: 'O reporte foi deletado com sucesso!',
+    };
   }
 }

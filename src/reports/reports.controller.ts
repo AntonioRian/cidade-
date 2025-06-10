@@ -11,6 +11,7 @@ import {
   FileTypeValidator,
   UploadedFile,
   ParseFilePipe,
+  Query,
 } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import { CreateReportDto } from './dto/create-report.dto';
@@ -22,9 +23,11 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { StorageService } from 'src/storage/storage.service';
 import { TransformInterceptor } from 'src/common/interceptors/transform.interceptor';
 import { ResponseClass } from 'src/common/decorators/response-class.decorator';
+import { ReportCategory } from './enums/report-category.enum';
+import { FilterReportDto } from './dto/filter-report.dto';
 
 @Controller('reports')
-@UseInterceptors(TransformInterceptor) // Aplica o interceptor para todo o controller
+@UseInterceptors(TransformInterceptor)
 export class ReportsController {
   constructor(
     private readonly reportsService: ReportsService,
@@ -33,7 +36,7 @@ export class ReportsController {
 
   @Post()
   @UseInterceptors(FileInterceptor('image'))
-  @ResponseClass(ReportResponseDto) // Define qual DTO usar
+  @ResponseClass(ReportResponseDto)
   async create(
     @Body() createReportDto: CreateReportDto,
     @UploadedFile(
@@ -69,9 +72,14 @@ export class ReportsController {
     return await this.reportsService.findAllByUserId(Number(id));
   }
 
+  @Get('/search')
+  @ResponseClass(ReportResponseDto)
+  findByFilter(@Query() filterDto: FilterReportDto) {
+    return this.reportsService.findByFilter(filterDto);
+  }
+
   @Roles(Role.Admin, Role.Secretaria)
   @Patch(':id')
-  @ResponseClass(ReportResponseDto)
   update(@Param('id') id: string, @Body() updateReportDto: UpdateReportDto) {
     return this.reportsService.update(+id, updateReportDto);
   }
